@@ -20,13 +20,13 @@ public class Level : MonoBehaviour
 	[SerializeField] ParticleSystem winFx;
 
 	[Space]
-	//remaining objects
-	[HideInInspector] public int objectsInScene;
-	//total objects at the beginning
-	[HideInInspector] public int totalObjects;
+    // Оставшиеся объекты
+    [HideInInspector] public int objectsInScene;
+    // Общее количество объектов в начале
+    [HideInInspector] public int totalObjects;
 
-	//the Objects parent
-	[SerializeField] Transform objectsParent;
+    // Родительский объект для объектов
+    [SerializeField] Transform objectsParent;
 
 	[Space]
 	[Header ("Materials & Sprites")]
@@ -66,8 +66,8 @@ public class Level : MonoBehaviour
 
 	void CountObjects ()
 	{
-		//Count collectable white objects
-		totalObjects = objectsParent.childCount;
+        // Подсчитываем количество собираемых белых объектов
+        totalObjects = objectsParent.childCount;
 		objectsInScene = totalObjects;
 	}
 
@@ -103,9 +103,6 @@ public class Level : MonoBehaviour
 
 	void OnValidate ()
 	{
-		//This method will exeute whenever you change something of this script in the inspector
-		//this method won't be included in the final Build (Editor only)
-
 		UpdateLevelColors ();
 	}
 }

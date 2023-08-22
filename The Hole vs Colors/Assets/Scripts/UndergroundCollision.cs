@@ -4,45 +4,61 @@ using DG.Tweening;
 
 public class UndergroundCollision : MonoBehaviour
 {
+    public int levelToUnlock;
+    int numberOfUnlockedLevels;
 
-	void OnTriggerEnter (Collider other)
+    public AudioSource audioSource;
+	public AudioClip audioClipVictory;
+    public AudioClip audioClipGameOver;
+	public AudioClip audioClipGameCube;
+
+
+    void OnTriggerEnter (Collider other)
 	{
-		//Object or Obstacle is at the bottom of the Hole
-
-		if (!Game.isGameover) {
+        // Объект или препятствие находится внизу ямы
+        if (!Game.isGameover) 
+		{
 			string tag = other.tag;
-			//------------------------ O B J E C T --------------------------
-			if (tag.Equals ("Object")) { 
-				Level.Instance.objectsInScene--;
+			if (tag.Equals ("Object"))
+			{
+                audioSource.PlayOneShot(audioClipGameCube);
+                Level.Instance.objectsInScene--;
 				UIManager.Instance.UpdateLevelProgress ();
 
-				//Make sure to remove this object from Magnetic field
 				Magnet.Instance.RemoveFromMagnetField (other.attachedRigidbody);
 
 				Destroy (other.gameObject);
-
-				//check if win
-				if (Level.Instance.objectsInScene == 0) {
-					//no more objects to collect (WIN)
-					UIManager.Instance.ShowLevelCompletedUI ();
+			
+				if (Level.Instance.objectsInScene == 0) 
+				{
+                    // больше нет объектов для сбора (ПОБЕДА)
+                    audioSource.PlayOneShot(audioClipVictory);
+                    UIManager.Instance.ShowLevelCompletedUI ();
 					Level.Instance.PlayWinFx ();
 
-					//Load Next level after 2 seconds
-					Invoke ("NextLevel", 2f);
+					numberOfUnlockedLevels = PlayerPrefs.GetInt("levelsUnlocked");
+					if (numberOfUnlockedLevels <= levelToUnlock)
+					{
+						PlayerPrefs.SetInt("levelsUnlocked", numberOfUnlockedLevels + 1);
+					}
+
+                    // Загрузка следующего уровня через 2 секунды
+                    Invoke("NextLevel", 2f);
 				}
 			}
-			//---------------------- O B S T A C L E -----------------------
-			if (tag.Equals ("Obstacle")) {
-				Game.isGameover = true;
+			
+
+			if (tag.Equals ("Obstacle")) 
+			{
+                audioSource.PlayOneShot(audioClipGameOver);
+                Game.isGameover = true;
 				Destroy (other.gameObject);
 
-				//Shake the camera for 1 second
-				Camera.main.transform
-					.DOShakePosition (1f, .2f, 20, 90f)
-					.OnComplete (() => {
-					//restart level after shaking complet
-					Level.Instance.RestartLevel ();
-				});
+                // Встряхнуть камеру в течение 1 секунды
+                Camera.main.transform.DOShakePosition (1f, .2f, 20, 90f).OnComplete (() => 
+					{                        
+                        Level.Instance.RestartLevel ();
+					});
 			}
 		}
 	}

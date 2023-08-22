@@ -20,8 +20,8 @@ public class Magnet : MonoBehaviour
 	[SerializeField] float magnetForce;
 
 
-	//to store objects inside magnetic field
-	List<Rigidbody> affectedRigidbodies = new List<Rigidbody> ();
+    // Для хранения объектов внутри магнитного поля
+    List<Rigidbody> affectedRigidbodies = new List<Rigidbody> ();
 	Transform magnet;
 
 	void Start ()
@@ -39,8 +39,8 @@ public class Magnet : MonoBehaviour
 		}
 	}
 
-	//Object enters Magnetic field
-	void OnTriggerEnter (Collider other)
+    // Объект входит в магнитное поле
+    void OnTriggerEnter (Collider other)
 	{
 		string tag = other.tag;
 
@@ -49,8 +49,8 @@ public class Magnet : MonoBehaviour
 		}
 	}
 
-	//Object exits Magnetic field
-	void OnTriggerExit (Collider other)
+    // Объект покидает магнитное поле
+    void OnTriggerExit (Collider other)
 	{
 		string tag = other.tag;
 
